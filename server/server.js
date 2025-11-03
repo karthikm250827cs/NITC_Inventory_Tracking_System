@@ -1,41 +1,56 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const connectDB = require("./config/connectDB");
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authroute");
-const labRoute = require("./routes/LabRoute");
+// backend/server.js
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+import connectDB from "./src/config/db.js";
+
+// ✅ Resolve __dirname (since ES modules don’t support it natively)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ Load environment variables
+dotenv.config();
+
+// ✅ Initialize Express app
 const app = express();
 
-// Middlewares FIRST
-app.use(cors());
-app.use(express.json());
+// ✅ Connect MongoDB
+connectDB();
 
-// Routes
-app.use("/api/users", userRoutes);
+// ✅ Middleware
+app.use(cors({ origin: process.env.FRONTEND_URL || "*" }));
+app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ✅ Import routes (ES6)
+import authRoutes from "./src/routes/auth.js";
+import userRoutes from "./src/routes/users.js";
+import equipmentRoutes from "./src/routes/equipment.js";
+import complaintRoutes from "./src/routes/complaints.js";
+import activityRoutes from "./src/routes/activityRoutes.js";
+import dashboardRoutes from "./src/routes/dashboardRoutes.js";
+
+// ✅ Use routes
 app.use("/api/auth", authRoutes);
-app.use("/api/labs", labRoute);
-app.use("/api/equipment", require("./routes/equipmentRoutes"));
-app.use("/api/complaints", require("./routes/complaintRoutes"));
-// Default route
+app.use("/api/users", userRoutes);
+app.use("/api/equipment", equipmentRoutes);
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/activities", activityRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+
+// ✅ Root route
 app.get("/", (req, res) => {
-  res.send("Home page");
+  res.send("✅ NITC Inventory Backend (ES6 Module) running successfully!");
 });
 
-// Start server
+// ✅ Error handler middleware
+app.use((err, req, res, next) => {
+  console.error("❌ Error:", err.stack);
+  res.status(500).json({ message: "Internal Server Error" });
+});
+
+// ✅ Start the server
 const PORT = process.env.PORT || 5000;
-
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  } catch (error) {
-    console.error("Error starting server:", error);
-  }
-};
-
-startServer();
-
-
-
-//mongodb+srv://nitcinventory:<db_password>@merninventory.yrmw3wh.mongodb.net/?appName=merninventory
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
