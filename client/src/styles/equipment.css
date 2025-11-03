@@ -1,0 +1,118 @@
+/* ==========================================================
+   NITC Inventory - Horizontal Equipment List Styling
+   ========================================================== */
+
+.equipment-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* ------------------------------
+   Equipment Card (Horizontal Row)
+------------------------------ */
+.equipment-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+.equipment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* ------------------------------
+   Equipment Info
+------------------------------ */
+.eq-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.eq-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.eq-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.eq-id {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* ------------------------------
+   Status Label
+------------------------------ */
+.status {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.status.working {
+  background: rgba(16, 185, 129, 0.15);
+  color: #0f766e;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status.faulty {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ------------------------------
+   Actions (Right Side)
+------------------------------ */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.actions button {
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Optional: Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.equipment-card {
+  animation: fadeIn 0.4s ease both;
+}

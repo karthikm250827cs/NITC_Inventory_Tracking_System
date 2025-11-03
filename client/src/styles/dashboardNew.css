@@ -1,0 +1,160 @@
+/* ==========================================================
+   NITC Lab Inventory - Modern Dashboard (Admin / Lab / User)
+   ========================================================== */
+
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.header p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+.card h3 {
+  color: #475569;
+  font-size: 0.9rem;
+}
+.card .value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0.2rem 0;
+}
+.card .change {
+  font-size: 0.8rem;
+}
+.change.up {
+  color: #10b981;
+}
+.change.down {
+  color: #ef4444;
+}
+
+/* --- Main Grid --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.recent-activity,
+.quick-actions {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.recent-activity h2,
+.quick-actions h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #0f172a;
+}
+
+/* --- Activity List --- */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.activity-card {
+  background: #f0f9ff;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+.status {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+.status.resolved {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status.approved {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+.status.warning {
+  background: #fecaca;
+  color: #b91c1c;
+}
+
+.desc {
+  font-size: 0.9rem;
+  color: #1e293b;
+}
+.meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* --- Quick Actions --- */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.quick-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: left;
+  font-weight: 500;
+  color: #0f172a;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.quick-btn:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
