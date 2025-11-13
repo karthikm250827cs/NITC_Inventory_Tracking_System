@@ -27,7 +27,7 @@ export default function Complaints() {
       console.error("Error loading complaints:", err);
     }
   };
-  //updated by Raafia 
+  //Updated by Raafia 
   // ✅ Fetch equipment for user's lab
   const fetchEquipment = async () => {
     try {

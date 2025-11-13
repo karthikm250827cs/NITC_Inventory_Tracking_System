@@ -24,7 +24,7 @@ export default function EquipmentList() {
       console.error(err);
     }
   };
- //updated by Raafia 
+ //Updated by Raafia 
   // 🔍 Filter whenever filters or search change
   useEffect(() => {
     let result = items;
