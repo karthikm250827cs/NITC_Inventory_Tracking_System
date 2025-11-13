@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import API from "../api/axios";
+import "../styles/dashboardNew.css";
 
 export default function AddEquipment() {
   const [form, setForm] = useState({
@@ -33,7 +34,6 @@ export default function AddEquipment() {
     try {
       await API.post("/equipment", form);
 
-      // ✅ Dynamic success messages based on user role
       if (user.role === "admin") {
         alert("✅ Equipment added successfully.");
       } else if (user.role === "lab-incharge") {
@@ -49,63 +49,111 @@ export default function AddEquipment() {
 
   return (
     <Layout>
-      <div className="max-w-2xl bg-white p-6 rounded shadow mx-auto mt-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-          Add Equipment
-        </h2>
-        <form onSubmit={submit} className="grid grid-cols-1 gap-4">
-          <input
-            required
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="Equipment Name"
-            className="p-2 border border-gray-300 rounded focus:ring focus:ring-indigo-200"
-          />
-          <input
-            value={form.type}
-            onChange={(e) => setForm({ ...form, type: e.target.value })}
-            placeholder="Equipment Type"
-            className="p-2 border border-gray-300 rounded focus:ring focus:ring-indigo-200"
-          />
-          <input
-            value={form.model}
-            onChange={(e) => setForm({ ...form, model: e.target.value })}
-            placeholder="Model"
-            className="p-2 border border-gray-300 rounded focus:ring focus:ring-indigo-200"
-          />
-          <input
-            value={form.serialNumber}
-            onChange={(e) =>
-              setForm({ ...form, serialNumber: e.target.value })
-            }
-            placeholder="Serial Number"
-            className="p-2 border border-gray-300 rounded focus:ring focus:ring-indigo-200"
-          />
-          <input
-            value={form.lab}
-            onChange={(e) => setForm({ ...form, lab: e.target.value })}
-            placeholder="Lab"
-            className="p-2 border border-gray-300 rounded focus:ring focus:ring-indigo-200"
-          />
-          <label className="text-sm text-gray-700 font-medium">
-            Warranty Expiry
-          </label>
-          <input
-            type="date"
-            value={form.warrantyExpiry}
-            onChange={(e) =>
-              setForm({ ...form, warrantyExpiry: e.target.value })
-            }
-            className="p-2 border border-gray-300 rounded focus:ring focus:ring-indigo-200"
-          />
+      <div className="p-6 w-full">
+        <h1 className="text-3xl font-semibold text-gray-900 mb-8">
+          ➕ Add New Equipment
+        </h1>
 
-          <button
-            type="submit"
-            className="px-4 py-2 mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded transition duration-200"
+        {/* Full-Width Glassmorphic Form */}
+        <div className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl rounded-2xl p-10 w-full">
+          <form
+            onSubmit={submit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
           >
-            Submit
-          </button>
-        </form>
+            {/* Equipment Name */}
+            <div className="md:col-span-2">
+              <label className="block text-gray-800 font-semibold mb-1">
+                Equipment Name<span className="text-red-500">*</span>
+              </label>
+              <input
+                required
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Enter equipment name"
+                className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+            </div>
+
+            {/* Type */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-1">
+                Type
+              </label>
+              <input
+                value={form.type}
+                onChange={(e) => setForm({ ...form, type: e.target.value })}
+                placeholder="e.g., Computer, Sensor"
+                className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+            </div>
+
+            {/* Model */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-1">
+                Model
+              </label>
+              <input
+                value={form.model}
+                onChange={(e) => setForm({ ...form, model: e.target.value })}
+                placeholder="Model number or name"
+                className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+            </div>
+
+            {/* Serial Number */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-1">
+                Serial Number
+              </label>
+              <input
+                value={form.serialNumber}
+                onChange={(e) =>
+                  setForm({ ...form, serialNumber: e.target.value })
+                }
+                placeholder="Unique serial number"
+                className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+            </div>
+
+            {/* Lab */}
+            <div>
+              <label className="block text-gray-800 font-semibold mb-1">
+                Lab
+              </label>
+              <input
+                value={form.lab}
+                onChange={(e) => setForm({ ...form, lab: e.target.value })}
+                placeholder="Enter lab name (e.g., NSL)"
+                className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+            </div>
+
+            {/* Warranty Expiry */}
+            <div className="md:col-span-2">
+              <label className="block text-gray-800 font-semibold mb-1">
+                Warranty Expiry
+              </label>
+              <input
+                type="date"
+                value={form.warrantyExpiry}
+                onChange={(e) =>
+                  setForm({ ...form, warrantyExpiry: e.target.value })
+                }
+                className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <div className="md:col-span-2 flex justify-end">
+              <button
+                type="submit"
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200"
+              >
+                🚀 Submit Equipment
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </Layout>
   );
