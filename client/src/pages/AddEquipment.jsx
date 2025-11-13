@@ -80,6 +80,7 @@ export default function AddEquipment() {
                 Type
               </label>
               <input
+                required
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
                 placeholder="e.g., Computer, Sensor"
@@ -93,6 +94,7 @@ export default function AddEquipment() {
                 Model
               </label>
               <input
+                required
                 value={form.model}
                 onChange={(e) => setForm({ ...form, model: e.target.value })}
                 placeholder="Model number or name"
@@ -106,6 +108,7 @@ export default function AddEquipment() {
                 Serial Number
               </label>
               <input
+                required
                 value={form.serialNumber}
                 onChange={(e) =>
                   setForm({ ...form, serialNumber: e.target.value })
@@ -120,12 +123,18 @@ export default function AddEquipment() {
               <label className="block text-gray-800 font-semibold mb-1">
                 Lab
               </label>
-              <input
+              <select
+                required
                 value={form.lab}
                 onChange={(e) => setForm({ ...form, lab: e.target.value })}
-                placeholder="Enter lab name (e.g., NSL)"
                 className="w-full p-4 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
-              />
+              >
+                <option value="">Select Lab</option>
+                <option value="SSL">SSL</option>
+                <option value="NSL">NSL</option>
+                <option value="ML">ML</option>
+                <option value="Image Processing">Image Processing</option>
+              </select>
             </div>
 
             {/* Warranty Expiry */}
@@ -134,6 +143,7 @@ export default function AddEquipment() {
                 Warranty Expiry
               </label>
               <input
+                required
                 type="date"
                 value={form.warrantyExpiry}
                 onChange={(e) =>
