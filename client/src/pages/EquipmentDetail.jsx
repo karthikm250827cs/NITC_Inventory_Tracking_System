@@ -37,3 +37,4 @@ export default function EquipmentDetail(){
     </Layout>
   );
 }
+ //updated by raafia for testing
