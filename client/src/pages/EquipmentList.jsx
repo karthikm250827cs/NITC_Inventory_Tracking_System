@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import API from "../api/axios";
-import "../styles/dashboardNew.css";
+import "../styles/equipment.css";
 
 export default function EquipmentList() {
   const [items, setItems] = useState([]);
@@ -24,8 +24,8 @@ export default function EquipmentList() {
       console.error(err);
     }
   };
-
-  // 🔍 Filters & search
+ //Updated by Raafia 
+  // 🔍 Filter whenever filters or search change
   useEffect(() => {
     let result = items;
 
@@ -44,150 +44,109 @@ export default function EquipmentList() {
     }
 
     if (type !== "All Types") {
-      result = result.filter(
-        (it) => (it.type || "").toLowerCase() === type.toLowerCase()
-      );
+      result = result.filter((it) => (it.type || "").toLowerCase() === type.toLowerCase());
     }
 
     if (lab !== "All Labs") {
-      result = result.filter(
-        (it) => (it.lab || "").toLowerCase() === lab.toLowerCase()
-      );
+      result = result.filter((it) => (it.lab || "").toLowerCase() === lab.toLowerCase());
     }
 
     setFiltered(result);
   }, [search, status, type, lab, items]);
 
-  // 🧾 Dropdown options
-  const statusOptions = [
-    "All Status",
-    ...new Set(items.map((i) => i.status || "Active")),
-  ];
-  const typeOptions = [
-    "All Types",
-    ...new Set(items.map((i) => i.type || "General")),
-  ];
-  const labOptions = [
-    "All Labs",
-    ...new Set(items.map((i) => i.lab || "Unknown")),
-  ];
+  // 🧾 Extract unique dropdown options
+  const statusOptions = ["All Status", ...new Set(items.map((i) => i.status || "Active"))];
+  const typeOptions = ["All Types", ...new Set(items.map((i) => i.type || "General"))];
+  const labOptions = ["All Labs", ...new Set(items.map((i) => i.lab || "Unknown"))];
 
   return (
     <Layout>
-      <div className="p-6 w-full">
-        <h1 className="text-3xl font-semibold text-gray-900 mb-8">
-          🧰 Equipment Catalog
-        </h1>
+      <div className="page-title">
+        <h1>Equipment Catalog</h1>
+      </div>
 
-        {/* 🔽 Filters Section */}
-        <div className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl rounded-2xl p-6 mb-10">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            🔎 Filter & Search
-          </h2>
+      {/* 🔽 Filters Section */}
+      <div className="filters card mt-4">
+        <div className="flex flex-wrap gap-3">
+          <input
+            className="input flex-1"
+            placeholder="Search equipment..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <input
-              className="p-3 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
-              placeholder="Search equipment..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-
-            <select
-              className="p-3 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              {statusOptions.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
-
-            <select
-              className="p-3 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              {typeOptions.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
-
-            <select
-              className="p-3 rounded-xl bg-white/50 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-400 outline-none"
-              value={lab}
-              onChange={(e) => setLab(e.target.value)}
-            >
-              {labOptions.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* 🧱 Equipment Grid */}
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((it) => (
-              <div
-                key={it._id}
-                className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl rounded-2xl p-6 hover:bg-white/40 transition-all duration-200"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {it.name}
-                    </h3>
-                    <div className="text-sm text-gray-600">
-                      {it.model} • {it.lab}
-                    </div>
-                  </div>
-                  <div
-                    className={`text-xs px-3 py-1 rounded-full font-semibold ${
-                      it.status === "Working"
-                        ? "bg-green-100 text-green-700"
-                        : it.status === "Under Repair"
-                        ? "bg-amber-100 text-amber-700"
-                        : it.status === "Faulty"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-slate-100 text-slate-700"
-                    }`}
-                  >
-                    {it.status}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-                  <div>
-                    <p className="text-xs text-gray-500">Serial Number</p>
-                    <p className="font-medium">{it.serialNumber || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Equipment ID</p>
-                    <p className="font-medium">
-                      {it.equipmentId || it._id.slice(-6).toUpperCase()}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Warranty Expiry</p>
-                    <p className="font-medium">
-                      {it.warrantyExpiry
-                        ? new Date(it.warrantyExpiry)
-                            .toISOString()
-                            .split("T")[0]
-                        : "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Type</p>
-                    <p className="font-medium">{it.type || "General"}</p>
-                  </div>
-                </div>
-              </div>
+          <select className="input" value={status} onChange={(e) => setStatus(e.target.value)}>
+            {statusOptions.map((opt) => (
+              <option key={opt}>{opt}</option>
             ))}
-          </div>
+          </select>
+
+          <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
+            {typeOptions.map((opt) => (
+              <option key={opt}>{opt}</option>
+            ))}
+          </select>
+
+          <select className="input" value={lab} onChange={(e) => setLab(e.target.value)}>
+            {labOptions.map((opt) => (
+              <option key={opt}>{opt}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* 🧰 Equipment Grid */}
+      <div className="equipment-grid mt-6">
+        {filtered.length > 0 ? (
+          filtered.map((it) => (
+            <div key={it._id} className="equipment-card">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-semibold">{it.name}</h3>
+                  <div className="text-sm text-slate-400">
+                    {it.model} • {it.lab}
+                  </div>
+                </div>
+                <div
+  className={`text-sm px-3 py-1 rounded-full font-medium ${
+    it.status === "Working"
+      ? "bg-green-100 text-green-700"
+      : it.status === "Under Repair"
+      ? "bg-amber-100 text-amber-700"
+      : it.status === "Faulty"
+      ? "bg-red-100 text-red-700"
+      : "bg-slate-100 text-slate-600"
+  }`}
+>
+  {it.status}
+</div>
+
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4 text-sm text-slate-600">
+                <div>
+                  <div className="text-xs text-slate-400">Serial Number:</div>
+                  <div className="text-slate-700">{it.serialNumber || "N/A"}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-400">Equipment ID:</div>
+                  <div className="text-slate-700">
+                    {it.equipmentId || it._id.slice(-6).toUpperCase()}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-400">Warranty:</div>
+                  <div className="text-slate-700">{it.warrantyExpiry || "N/A"}</div>
+                </div>
+                {/* <div>
+                  <div className="text-xs text-slate-400">Last Service:</div>
+                  <div className="text-slate-700">{it.lastService || "N/A"}</div>
+                </div> */}
+              </div>
+            </div>
+          ))
         ) : (
-          <div className="text-center text-gray-600 mt-10 text-lg">
+          <div className="text-center text-slate-400 mt-10">
             No equipment found matching your filters.
           </div>
         )}
