@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import API from "../api/axios";
+import "../styles/dashboardNew.css";
 
 export default function ViewReports() {
-  const [equipment, setEquipment] = useState([]);
-  const [summary, setSummary] = useState({ total: 0, byStatus: {}, byLab: {} });
+  const [summary, setSummary] = useState({ total: 0, labs: {} });
 
   useEffect(() => {
     loadData();
@@ -13,87 +13,96 @@ export default function ViewReports() {
   const loadData = async () => {
     try {
       const res = await API.get("/equipment");
-      setEquipment(res.data || []);
-      calculateSummary(res.data);
+      const data = res.data || [];
+      calculateSummary(data);
     } catch (err) {
       console.error("Error loading reports:", err);
     }
   };
 
   const calculateSummary = (data) => {
-    const total = data.length;
-    const byStatus = {};
-    const byLab = {};
+    const labs = {};
 
     data.forEach((item) => {
-      byStatus[item.status] = (byStatus[item.status] || 0) + 1;
-      byLab[item.lab || "Unassigned"] = (byLab[item.lab || "Unassigned"] || 0) + 1;
+      const lab = item.lab || "Unassigned";
+      if (!labs[lab]) labs[lab] = { working: 0, faulty: 0 };
+
+      if (item.status === "Working") labs[lab].working++;
+      else if (item.status === "Faulty" || item.status === "Under Repair")
+        labs[lab].faulty++;
     });
 
-    setSummary({ total, byStatus, byLab });
+    setSummary({ total: data.length, labs });
   };
+
+  const totalWorking = Object.values(summary.labs).reduce(
+    (sum, lab) => sum + lab.working,
+    0
+  );
+  const totalFaulty = Object.values(summary.labs).reduce(
+    (sum, lab) => sum + lab.faulty,
+    0
+  );
 
   return (
     <Layout>
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">📊 Equipment Reports</h1>
+        <h1 className="text-3xl font-semibold text-gray-900 mb-8">
+          📊 Equipment Report Dashboard
+        </h1>
 
-        {/* Overview Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          <div className="bg-blue-100 text-blue-800 p-4 rounded-lg shadow">
-            <p className="text-sm font-semibold">Total Equipment</p>
-            <h2 className="text-2xl font-bold">{summary.total}</h2>
+        {/* Glass Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+          <div className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl p-5 rounded-2xl">
+            <p className="text-sm text-gray-700 font-medium">Total Equipment</p>
+            <h2 className="text-3xl font-bold text-gray-900 mt-1">
+              {summary.total}
+            </h2>
           </div>
 
-          <div className="bg-green-100 text-green-800 p-4 rounded-lg shadow">
-            <p className="text-sm font-semibold">Working</p>
-            <h2 className="text-2xl font-bold">{summary.byStatus["Working"] || 0}</h2>
+          <div className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl p-5 rounded-2xl">
+            <p className="text-sm text-gray-700 font-medium">Working</p>
+            <h2 className="text-3xl font-bold text-green-700 mt-1">
+              {totalWorking}
+            </h2>
           </div>
 
-          <div className="bg-red-100 text-red-800 p-4 rounded-lg shadow">
-            <p className="text-sm font-semibold">Faulty / Under Repair</p>
-            <h2 className="text-2xl font-bold">
-              {(summary.byStatus["Faulty"] || 0) + (summary.byStatus["Under Repair"] || 0)}
+          <div className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl p-5 rounded-2xl">
+            <p className="text-sm text-gray-700 font-medium">
+              Faulty / Under Repair
+            </p>
+            <h2 className="text-3xl font-bold text-red-700 mt-1">
+              {totalFaulty}
             </h2>
           </div>
         </div>
 
-        {/* By Status */}
-        <div className="bg-white rounded-lg shadow p-4 mb-8">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700">Equipment by Status</h2>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 border-b">Status</th>
-                <th className="p-2 border-b">Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(summary.byStatus).map(([status, count]) => (
-                <tr key={status}>
-                  <td className="p-2 border-b">{status}</td>
-                  <td className="p-2 border-b">{count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Glass Table */}
+        <div className="backdrop-blur-xl bg-white/30 border border-white/60 shadow-xl rounded-2xl p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Equipment by Lab
+          </h2>
 
-        {/* By Lab */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700">Equipment by Lab</h2>
-          <table className="w-full border-collapse">
+          <table className="w-full text-gray-900">
             <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 border-b">Lab</th>
-                <th className="p-2 border-b">Count</th>
+              <tr className="bg-white/40 backdrop-blur-lg">
+                <th className="p-3 text-left font-semibold">Lab</th>
+                <th className="p-3 text-left font-semibold">Working</th>
+                <th className="p-3 text-left font-semibold">
+                  Faulty / Under Repair
+                </th>
               </tr>
             </thead>
             <tbody>
-              {Object.entries(summary.byLab).map(([lab, count]) => (
-                <tr key={lab}>
-                  <td className="p-2 border-b">{lab}</td>
-                  <td className="p-2 border-b">{count}</td>
+              {Object.entries(summary.labs).map(([lab, data]) => (
+                <tr key={lab} className="hover:bg-white/30 transition-colors">
+                  <td className="p-3 border-b border-white/50">{lab}</td>
+                  <td className="p-3 border-b border-white/50">
+                    {data.working}
+                  </td>
+                  <td className="p-3 border-b border-white/50">
+                    {data.faulty}
+                  </td>
                 </tr>
               ))}
             </tbody>
